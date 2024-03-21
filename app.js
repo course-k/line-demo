@@ -28,6 +28,7 @@ app.get("/", (_, res) => {
 app.post("/webhook", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
   if (req.body.events[0].type === "message") {
+    console.log(req.body.events[0]);
     const dataString = JSON.stringify({
       replyToken: req.body.events[0].replyToken,
       messages: [
