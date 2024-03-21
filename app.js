@@ -25,12 +25,12 @@ app.get("/", (_, res) => {
   res.sendStatus(200);
 });
 
-app.post("/webhook", function (req, res) {
+app.post("/webhook", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
   if (req.body.events[0].type === "message") {
     const dataString = JSON.stringify({
       replyToken: req.body.events[0].replyToken,
-      message: [
+      messages: [
         {
           type: "text",
           text: "Hello, user",
@@ -43,7 +43,7 @@ app.post("/webhook", function (req, res) {
     });
     const headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer" + TOKEN,
+      Authorization: "Bearer " + TOKEN,
     };
     const webhookOptions = {
       hostname: "api.line.me",
@@ -58,7 +58,7 @@ app.post("/webhook", function (req, res) {
       });
     });
     request.on("error", err => {
-      console.log(err);
+      console.error(err);
     });
 
     request.write(dataString);
