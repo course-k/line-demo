@@ -55,6 +55,7 @@ app.post("/webhook", (req, res) => {
     const request = https.request(webhookOptions, res => {
       res.on("data", d => {
         process.stdout.write(d);
+        console.log(d);
       });
     });
     request.on("error", err => {
