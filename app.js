@@ -23,46 +23,48 @@ app.get("/", (_, res) => {
 //ルーティングの設定-MessaginAPI
 app.post("/webhook", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
-  if (req.body.events[0].type === "message") {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + TOKEN,
-    };
-    const dataString = JSON.stringify({
-      replyToken: req.body.events[0].replyToken,
-      messages: [
-        {
-          type: "text",
-          text: "Hello, user",
-        },
-        {
-          type: "text",
-          text: "May I help you?"
-        },
-      ],
-    });
-    const webhookOptions = {
-      hostname: "api.line.me",
-      path: "/v2/bot/message/reply",
-      method: "POST",
-      headers: headers,
-      body: dataString,
-    }
-    const request = https.request(webhookOptions, res => {
-      res.on("data", d => {
-        process.stdout.write(d);
-      });
-    });
-    request.on("error", err => {
-      console.error(err);
-    });
-
-    request.write(dataString);
-    request.end();
+  let messages = [];
+  switch (req.body.events[0].type) {
+    case "message":
+      messages.push({ type: "text", text: "Hello, user", })
+      messages.push({ type: "text", text: "May I help you?", })
+      break;
+    case "follow":
+      messages.push({ type: "text", text: "Nice to meet you!", });
   }
+  autoReply(req, messages);
 });
 
 // リスナーの設定
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
+
+function autoReply(req, messages) {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + TOKEN,
+  };
+  const dataString = JSON.stringify({
+    replyToken: req.body.events[0].replyToken,
+    messages: messages,
+  });
+  const webhookOptions = {
+    hostname: "api.line.me",
+    path: "/v2/bot/message/reply",
+    method: "POST",
+    headers: headers,
+    body: dataString,
+  }
+  const request = https.request(webhookOptions, res => {
+    res.on("data", d => {
+      process.stdout.write(d);
+    });
+  });
+  request.on("error", err => {
+    console.error(err);
+  });
+
+  request.write(dataString);
+  request.end();
+}
