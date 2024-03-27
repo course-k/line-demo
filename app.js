@@ -1,6 +1,7 @@
 // モジュールのインポート
 const https = require("https");
 const express = require("express");
+const fs = require("fs");
 
 // 環境変数の取得
 // ポート番号
@@ -32,6 +33,9 @@ app.post("/webhook", (req, res) => {
     case "follow":
       messages.push({ type: "text", text: "Nice to meet you!", });
   }
+  fs.writeFileSync('./test.txt', req.body.events[0].type);
+  const r = fs.readFileSync('./test.txt');
+  console.log(r);
   autoReply(req, messages);
 });
 
