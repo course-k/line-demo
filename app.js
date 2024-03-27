@@ -9,6 +9,13 @@ const PORT = process.env.PORT || 3000;
 // Messaging APIを呼び出すためのトークン
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
+const HEADERS = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + TOKEN,
+};
+
+const HOSTNAME = "api.line.me";
+
 // Expressアプリケーションオブジェクトの生成
 const app = express();
 
@@ -32,11 +39,18 @@ app.post("/webhook", (req, res) => {
       break;
     case "follow":
       messages.push({ type: "text", text: "Nice to meet you!", });
+      const userData = {
+        userId: req.body.events[0].source.userId
+      }
+      fs.writeFileSync('./user_data.json', JSON.stringify(userData));
   }
-  fs.writeFileSync('./test.txt', req.body.events[0].type);
-  const r = fs.readFileSync('./test.txt');
-  console.log(r);
   autoReply(req, messages);
+});
+
+app.post("/push", (req, res) => {
+  res.send("HTTP POST request sent to the webhook URL!");
+  const messages = { type: "text", text: "Nice to meet you!", };
+  pushMessage(messages);
 });
 
 // リスナーの設定
@@ -45,19 +59,43 @@ app.listen(PORT, () => {
 });
 
 function autoReply(req, messages) {
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + TOKEN,
-  };
+
   const dataString = JSON.stringify({
     replyToken: req.body.events[0].replyToken,
     messages: messages,
   });
   const webhookOptions = {
-    hostname: "api.line.me",
+    hostname: HOSTNAME,
     path: "/v2/bot/message/reply",
     method: "POST",
-    headers: headers,
+    headers: HEADERS,
+    body: dataString,
+  }
+  const request = https.request(webhookOptions, res => {
+    res.on("data", d => {
+      process.stdout.write(d);
+    });
+  });
+  request.on("error", err => {
+    console.error(err);
+  });
+
+  request.write(dataString);
+  request.end();
+}
+
+function pushMessage(messages) {
+  const userData = fs.readFileSync('./user_data.json', 'utf-8');
+  const userId = userData.userId;
+  const dataString = JSON.stringify({
+    to: userId,
+    messages: messages,
+  });
+  const webhookOptions = {
+    hostname: HOSTNAME,
+    path: "/v2/bot/message/push",
+    method: "POST",
+    headers: HEADERS,
     body: dataString,
   }
   const request = https.request(webhookOptions, res => {
