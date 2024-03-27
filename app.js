@@ -47,7 +47,7 @@ app.post("/webhook", (req, res) => {
   autoReply(req, messages);
 });
 
-app.post("/push", (req, res) => {
+app.get("/push", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
   const messages = { type: "text", text: "Nice to meet you!", };
   pushMessage(messages);
