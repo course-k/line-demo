@@ -98,6 +98,7 @@ function pushMessage(messages) {
     headers: HEADERS,
     body: dataString,
   }
+  console.log(dataString);
   const request = https.request(webhookOptions, res => {
     res.on("data", d => {
       process.stdout.write(d);
