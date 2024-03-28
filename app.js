@@ -49,7 +49,7 @@ app.post("/webhook", (req, res) => {
 
 app.get("/push", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
-  const messages = [{ type: "text", text: "Nice to meet you!", }];
+  const messages = [{ type: "text", text: "push message!", }];
   pushMessage(messages);
 });
 
@@ -87,6 +87,7 @@ function autoReply(req, messages) {
 function pushMessage(messages) {
   const userData = fs.readFileSync('./user_data.json', 'utf-8');
   const userId = userData.userId;
+  console.log(userData);
   const dataString = JSON.stringify({
     to: userId,
     messages: messages,
