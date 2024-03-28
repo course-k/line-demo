@@ -50,6 +50,9 @@ app.post("/webhook", (req, res) => {
 app.get("/push", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
   const messages = [{ type: "text", text: "push message!", }];
+  const userData = fs.readFileSync('./user_data.json', 'utf-8');
+  const userId = userData.userId;
+  console.log(userData);
   pushMessage(messages);
 });
 
