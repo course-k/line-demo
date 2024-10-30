@@ -34,7 +34,7 @@ app.post("/webhook", (req, res) => {
   let messages = [];
   switch (req.body.events[0].type) {
     case "message":
-      if (req.body.events[0].message.text === "テスト") break;
+      if (req.body.events[0].message.text === "テストメッセージ") break;
       messages.push({ type: "text", text: "Hello, user" });
       messages.push({ type: "text", text: "May I help you?" });
       break;
