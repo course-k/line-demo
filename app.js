@@ -21,7 +21,7 @@ const app = express();
 
 // ミドルウェアの設定
 app.use(express.json());
-app.use(express.urlencoded({ extended: true, }));
+app.use(express.urlencoded({ extended: true }));
 
 // ルーティングの設定-ドメインのルート
 app.get("/", (_, res) => {
@@ -34,22 +34,23 @@ app.post("/webhook", (req, res) => {
   let messages = [];
   switch (req.body.events[0].type) {
     case "message":
-      messages.push({ type: "text", text: "Hello, user", })
-      messages.push({ type: "text", text: "May I help you?", })
+      if (req.body.events[0].message.text === "テスト") break;
+      messages.push({ type: "text", text: "Hello, user" });
+      messages.push({ type: "text", text: "May I help you?" });
       break;
     case "follow":
-      messages.push({ type: "text", text: "Nice to meet you!", });
+      messages.push({ type: "text", text: "Nice to meet you!" });
       const userData = {
-        userId: req.body.events[0].source.userId
-      }
-      fs.writeFileSync('./user_data.json', JSON.stringify(userData));
+        userId: req.body.events[0].source.userId,
+      };
+      fs.writeFileSync("./user_data.json", JSON.stringify(userData));
   }
   autoReply(req, messages);
 });
 
 app.get("/push", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
-  const messages = [{ type: "text", text: "push message!", }];
+  const messages = [{ type: "text", text: "push message!" }];
   pushMessage(messages);
 });
 
@@ -59,7 +60,6 @@ app.listen(PORT, () => {
 });
 
 function autoReply(req, messages) {
-
   const dataString = JSON.stringify({
     replyToken: req.body.events[0].replyToken,
     messages: messages,
@@ -70,13 +70,13 @@ function autoReply(req, messages) {
     method: "POST",
     headers: HEADERS,
     body: dataString,
-  }
-  const request = https.request(webhookOptions, res => {
-    res.on("data", d => {
+  };
+  const request = https.request(webhookOptions, (res) => {
+    res.on("data", (d) => {
       process.stdout.write(d);
     });
   });
-  request.on("error", err => {
+  request.on("error", (err) => {
     console.error(err);
   });
 
@@ -85,7 +85,7 @@ function autoReply(req, messages) {
 }
 
 function pushMessage(messages) {
-  const userData = JSON.parse(fs.readFileSync('./user_data.json', 'utf-8'));
+  const userData = JSON.parse(fs.readFileSync("./user_data.json", "utf-8"));
   const userId = userData.userId;
   const dataString = JSON.stringify({
     to: userId,
@@ -97,13 +97,13 @@ function pushMessage(messages) {
     method: "POST",
     headers: HEADERS,
     body: dataString,
-  }
-  const request = https.request(webhookOptions, res => {
-    res.on("data", d => {
+  };
+  const request = https.request(webhookOptions, (res) => {
+    res.on("data", (d) => {
       process.stdout.write(d);
     });
   });
-  request.on("error", err => {
+  request.on("error", (err) => {
     console.error(err);
   });
 
