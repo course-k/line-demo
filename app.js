@@ -104,8 +104,13 @@ app.get("/basic-flex", (req, res) => {
             separator: true,
             separatorColor: "#FFFFFF",
           },
+          body: {
+            backgroundColor: "#FFECB3",
+            separator: true,
+            separatorColor: "#FFFFFF",
+          },
           footer: {
-            backgroundColor: "#B8E6C0s",
+            backgroundColor: "#B8E6C0",
             separator: true,
             separatorColor: "#FFFFFF",
           },
