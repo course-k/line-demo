@@ -54,6 +54,47 @@ app.get("/push", (req, res) => {
   pushMessage(messages);
 });
 
+app.get("/flex", (req, res) => {
+  res.send("Flex request sent to the webhook URL!");
+  // Flex Messageのメインコンテンツ
+
+  const header = {
+    type: "box",
+    layout: "vertical",
+    contents: [{ type: "text", text: "Header" }],
+  };
+  const hero = {
+    type: "box",
+    layout: "vertical",
+    contents: [{ type: "text", text: "Hero" }],
+  };
+  const body = {
+    type: "box",
+    layout: "vertical",
+    contents: [{ type: "text", text: "Body" }],
+  };
+  const footer = {
+    type: "box",
+    layout: "vertical",
+    contents: [{ type: "text", text: "Footer" }],
+  };
+
+  const messages = [
+    {
+      type: "flex",
+      altText: "This is a flex message.",
+      contents: {
+        type: "bubble",
+        header,
+        hero,
+        body,
+        footer,
+      },
+    },
+  ];
+  pushMessage(messages);
+});
+
 // リスナーの設定
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
