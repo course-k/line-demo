@@ -102,6 +102,12 @@ app.get("/basic-flex", (req, res) => {
           hero: {
             backgroundColor: "#B5D8FF",
             separator: true,
+            separatorColor: "#FFFFFF",
+          },
+          footer: {
+            backgroundColor: "#B8E6C0s",
+            separator: true,
+            separatorColor: "#FFFFFF",
           },
         },
       },
