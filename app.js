@@ -95,23 +95,23 @@ app.get("/basic-flex", (req, res) => {
         hero,
         body,
         footer,
-        styles: {
-          header: {
-            backgroundColor: "#FFB5C5",
-          },
-          hero: {
-            backgroundColor: "#B5D8FF",
-            separator: true,
-          },
-          // body: {
-          //   backgroundColor: "#FFECB3 ",
-          //   separator: true,
-          // },
-          footer: {
-            backgroundColor: "#B8E6C0s",
-            separator: true,
-          },
-        },
+        // styles: {
+        //   header: {
+        //     backgroundColor: "#FFB5C5",
+        //   },
+        //   hero: {
+        //     backgroundColor: "#B5D8FF",
+        //     separator: true,
+        //   },
+        //   // body: {
+        //   //   backgroundColor: "#FFECB3 ",
+        //   //   separator: true,
+        //   // },
+        //   footer: {
+        //     backgroundColor: "#B8E6C0s",
+        //     separator: true,
+        //   },
+        // },
       },
     },
   ];
