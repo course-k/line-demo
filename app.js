@@ -124,6 +124,7 @@ app.listen(PORT, () => {
 });
 
 function pushMessage(messages) {
+  console.log("pushmessage called");
   const userData = JSON.parse(fs.readFileSync("./user_data.json", "utf-8"));
   const userId = userData.userId;
   const dataString = JSON.stringify({
@@ -147,5 +148,6 @@ function pushMessage(messages) {
   });
 
   request.write(dataString);
+  console.log("pushmessage done");
   request.end();
 }
