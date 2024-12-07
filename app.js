@@ -33,11 +33,6 @@ app.post("/webhook", (req, res) => {
   res.send("HTTP POST request sent to the webhook URL!");
   let messages = [];
   switch (req.body.events[0].type) {
-    case "message":
-      if (req.body.events[0].message.text === "テストメッセージ") break;
-      messages.push({ type: "text", text: "Hello, user" });
-      messages.push({ type: "text", text: "May I help you?" });
-      break;
     case "follow":
       messages.push({ type: "text", text: "Nice to meet you!" });
       const userData = {
@@ -45,38 +40,48 @@ app.post("/webhook", (req, res) => {
       };
       fs.writeFileSync("./user_data.json", JSON.stringify(userData));
   }
-  autoReply(req, messages);
 });
 
-app.get("/push", (req, res) => {
-  res.send("HTTP POST request sent to the webhook URL!");
-  const messages = [{ type: "text", text: "push message!" }];
-  pushMessage(messages);
-});
-
-app.get("/flex", (req, res) => {
+app.get("/basic-flex", (req, res) => {
   res.send("Flex request sent to the webhook URL!");
-  // Flex Messageのメインコンテンツ
-
+  // headerブロック
   const header = {
     type: "box",
     layout: "vertical",
-    contents: [{ type: "text", text: "Header" }],
+    contents: [
+      // コンポーネント
+      { type: "text", text: "Header" },
+    ],
   };
+
+  // heroブロック
   const hero = {
     type: "box",
     layout: "vertical",
-    contents: [{ type: "text", text: "Hero" }],
+    contents: [
+      // コンポーネント
+      { type: "text", text: "Header" },
+    ],
   };
+
+  // bodyブロック
   const body = {
     type: "box",
     layout: "vertical",
-    contents: [{ type: "text", text: "Body" }],
+    contents: [
+      // コンポーネント
+      { type: "text", text: "Header" },
+    ],
   };
+
+  // footerブロック
   const footer = {
     type: "box",
     layout: "vertical",
-    contents: [{ type: "text", text: "Footer" }],
+    contents: [
+      // コンポーネント
+      { type: "text", text: "Header" },
+    ],
   };
 
   const messages = [
@@ -84,6 +89,7 @@ app.get("/flex", (req, res) => {
       type: "flex",
       altText: "This is a flex message.",
       contents: {
+        // コンテナ
         type: "bubble",
         header,
         hero,
@@ -99,31 +105,6 @@ app.get("/flex", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
-
-function autoReply(req, messages) {
-  const dataString = JSON.stringify({
-    replyToken: req.body.events[0].replyToken,
-    messages: messages,
-  });
-  const webhookOptions = {
-    hostname: HOSTNAME,
-    path: "/v2/bot/message/reply",
-    method: "POST",
-    headers: HEADERS,
-    body: dataString,
-  };
-  const request = https.request(webhookOptions, (res) => {
-    res.on("data", (d) => {
-      process.stdout.write(d);
-    });
-  });
-  request.on("error", (err) => {
-    console.error(err);
-  });
-
-  request.write(dataString);
-  request.end();
-}
 
 function pushMessage(messages) {
   const userData = JSON.parse(fs.readFileSync("./user_data.json", "utf-8"));
