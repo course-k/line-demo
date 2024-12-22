@@ -85,7 +85,7 @@ const app = express();
 // ミドルウェアの設定
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/static", express.static(path.join(__dirname, "public")));
+app.use('/static', express.static(path.join(__dirname, '..', 'public')));
 
 // ルーティングの設定-ドメインのルート
 app.get("/", (_: Request, res: Response) => {
