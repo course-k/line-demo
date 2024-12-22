@@ -5,6 +5,7 @@ import { WebhookEvent } from "./type";
 import { ReservationService } from "./reservationService";
 import { FlexMessageService } from "./flexMessageService";
 import { LineApiService } from "./LineApiService";
+import path from "path";
 
 // 型定義
 interface UserData {
@@ -84,6 +85,7 @@ const app = express();
 // ミドルウェアの設定
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/static", express.static(path.join(__dirname, "public")));
 
 // ルーティングの設定-ドメインのルート
 app.get("/", (_: Request, res: Response) => {
